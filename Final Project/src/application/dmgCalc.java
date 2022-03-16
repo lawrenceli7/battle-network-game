@@ -27,10 +27,13 @@ public class dmgCalc {
 		return false;
 	}
 	
-	public int playerCalc(int d, int elPlayer, int elEnemy) { //player damage calculator
+	public static int playerCalc(int d, int elPlayer, int elEnemy) { //player damage calculator
 		int dmg = d;
 		elemental el = new elemental(elEnemy);
 		dmg = el.eleDamage(dmg, elPlayer);
+		if(elPlayer == 5) {
+			dmg = dmg * 2;
+		}
 		return dmg;
 	}
 	
