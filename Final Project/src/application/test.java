@@ -1,6 +1,10 @@
 package application;
 
+import java.awt.event.KeyAdapter;              
+import java.awt.event.KeyEvent;
+
 public class test {
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -32,7 +36,22 @@ public class test {
 		System.out.println(dmgCalc.playerCalc(30, 5, 0));
 		
 		System.out.println(dmgCalc.enemyCalc(30, 5, 0));
-
+		
+		Swordsmen sword = new Swordsmen();
+		
+		sword.Shuffle();
+		
+		sword.printDeck();
+		
+		
+		System.out.println(sword.action(KeyEvent.VK_X));
+		System.out.println(sword.action(KeyEvent.VK_X));
+		System.out.println(sword.action(KeyEvent.VK_X));
+		System.out.println(sword.action(KeyEvent.VK_X));
+		
+		System.out.println("");
+		sword.printDeck();
+		System.out.println(sword.action(KeyEvent.VK_X));
 	}
 
 }

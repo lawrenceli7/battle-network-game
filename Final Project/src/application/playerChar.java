@@ -79,104 +79,41 @@ public class playerChar {
 	
 	public void Shuffle() { // shuffles attacks
 		double rng = Math.random() * (MAX_RNG - MIN_RNG + 1) + MIN_RNG;
-		if(rng <= 1/24 && rng >= 0) {
-			int[] deck2 = {1, 2, 3, 4};
-			deck = deck2;
-			}
-		else if(rng <= 2/24 && rng > 1/24) {
-			int[] deck2 = {1, 2, 4, 3};
-			deck = deck2;
+		if(rng >= 0 && rng <25) {
+			deck[0] = 1;
+			deck[1] = 2;
+			deck[2] = 3;
+			deck[3] = 4;
 		}
-		else if(rng <= 3/24 && rng > 2/24) {
-			int[] deck2 = {1, 4, 2, 3};
-			deck = deck2;
+		else if(rng >= 25 && rng <50) {
+			deck[0] = 3;
+			deck[1] = 1;
+			deck[2] = 4;
+			deck[3] = 2;
 		}
-		else if(rng <= 4/24 && rng > 3/24) {
-			int[] deck2 = {4, 1, 2, 3};
-			deck = deck2;
+		else if(rng >= 50 && rng <75) {
+			deck[0] = 4;
+			deck[1] = 2;
+			deck[2] = 3;
+			deck[3] = 1;
 		}
-		else if(rng <= 5/24 && rng > 4/24) {
-			int[] deck2 = {1, 3, 2, 4};
-			deck = deck2;
-		}
-		else if(rng <= 6/24 && rng > 5/24) {
-			int[] deck2 = {1, 3, 4, 2};
-			deck = deck2;
-		}
-		else if(rng <= 7/24 && rng > 6/24) {
-			int[] deck2 = {1, 4, 3, 2};
-			deck = deck2;
-		}
-		else if(rng <= 8/24 && rng > 7/24) {
-			int[] deck2 = {4, 1, 3, 2};
-			deck = deck2;
-		} 
-		else if(rng <= 9/24 && rng > 8/24) {
-			int[] deck2 = {3, 1, 2, 4};
-			deck = deck2;
-		}
-		else if(rng <= 10/24 && rng > 9/24) {
-			int[] deck2 = {3, 1, 4, 2};
-			deck = deck2;
-		}
-		else if(rng <= 11/24 && rng > 10/24) {
-			int[] deck2 = {3, 4, 1, 2};
-			deck = deck2;
-		}
-		else if(rng <= 12/24 && rng > 11/24) {
-			int[] deck2 = {4, 3, 1, 2};
-			deck = deck2;
-		}
-		else if(rng <= 13/24 && rng > 12/24) {
-			int[] deck2 = {2, 1, 3, 4};
-			deck = deck2;
-		}
-		else if(rng <= 14/24 && rng > 13/24) {
-			int[] deck2 = {2, 1, 4, 3};
-			deck = deck2;
-		}
-		else if(rng <= 15/24 && rng > 14/24) {
-			int[] deck2 = {2, 4, 1, 3};
-			deck = deck2;
-		}
-		else if(rng <= 16/24 && rng > 15/24) {
-			int[] deck2 = {4, 2, 1, 3};
-			deck = deck2;
-		}
-		else if(rng <= 17/24 && rng > 16/24) {
-			int[] deck2 = {2, 3, 1, 4};
-			deck = deck2;
-		}
-		else if(rng <= 18/24 && rng > 17/24) {
-			int[] deck2 = {2, 3, 4, 1};
-			deck = deck2;
-		}
-		else if(rng <= 19/24 && rng > 18/24) {
-			int[] deck2 = {2, 4, 3, 1};
-			deck = deck2;
-		}
-		else if(rng <= 20/24 && rng > 19/24) {
-			int[] deck2 = {4, 2, 3, 1};
-			deck = deck2;
-		}
-		else if(rng <= 21/24 && rng > 20/24) {
-			int[] deck2 = {3, 2, 1, 4};
-			deck = deck2;
-		}
-		else if(rng <= 22/24 && rng > 21/24) {
-			int[] deck2 = {3, 2, 4, 1};
-			deck = deck2;
-		}
-		else if(rng <= 23/24 && rng > 22/24) {
-			int[] deck2 = {3, 4, 2, 1};
-			deck = deck2;
-		}
-		else if(rng <= 1 && rng > 23/24) {
-			int[] deck2 = {4, 3, 2, 1};
-			deck = deck2;
+		else if(rng >=75 && rng <=100) {
+			deck[0] = 2;
+			deck[1] = 4;
+			deck[2] = 3;
+			deck[3] = 1;
 		}
 		
 		
 	}
+	
+	public void printDeck() {
+		for(int i = 0; i < deck.length; i++) {
+			System.out.print(deck[i]);
+		}
+		System.out.println("");
+	}
 }	
+
+
 		

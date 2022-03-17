@@ -57,11 +57,11 @@ public class Swordsmen extends playerChar {
 	
 	
 	
-	public String action(KeyEvent k) {
+	public String action(int k) {
 		
 		String act = "";
 		
-		int code = k.getKeyCode();
+		int code = k;
 		if(code == KeyEvent.VK_LEFT) { // movements
 			act = "LF";
 			return act;
@@ -83,36 +83,46 @@ public class Swordsmen extends playerChar {
 				if(i == 3) {
 					if(deck[i] == 1) {
 						Shuffle();
-						return "ATK1";
+						act = "ATK1";
+						return act;
 					}
 					else if(deck[i] == 2) {
 						Shuffle();
-						return "ATK2";
+						act = "ATK2";
+						return act;
 					}
 					else if(deck[i] == 3) {
 						Shuffle();
-						return "ATK3";
+						act = "ATK3";
+						return act;
 					}
 					else if(deck[i] == 4) {
 						Shuffle();
-						return "ATK4";
+						act = "ATK4";
+						return act;
 					}
 				}
-				if(deck[i] == 1) {
-					deck[i] = 0;
-					return "ATK1";
-				}
-				else if(deck[i] == 2) {
-					deck[i] = 0;
-					return "ATK2";
-				}
-				else if(deck[i] == 3) {
-					deck[i] = 0;
-					return "ATK3";
-				}
-				else if(deck[i] == 4) {
-					deck[i] = 0;
-					return "ATK4";
+				else if(i < 3) {
+					if(deck[i] == 1) {
+						deck[i] = 0;
+						act = "ATK1";
+						return act;
+					}
+					else if(deck[i] == 2) {
+						deck[i] = 0;
+						act = "ATK2";
+						return act;
+					}
+					else if(deck[i] == 3) {
+						deck[i] = 0;
+						act = "AT3";
+						return act;
+					}
+					else if(deck[i] == 4) {
+						deck[i] = 0;
+						act = "ATK4";
+						return act;
+					}
 				}
 			}
 		}
