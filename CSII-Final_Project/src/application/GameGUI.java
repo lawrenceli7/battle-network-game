@@ -46,7 +46,7 @@ public class GameGUI extends Application {
 
 	private Scene startScreen(Stage primaryStage) {
 		Pane root = new Pane();
-		Image logo = new Image("welcomeScreen.png");
+		Image logo = new Image("battlenetwork.jpg");
 		ImageView logo1 = new ImageView(logo);
 		logo1.setLayoutX(350);
 		logo1.setLayoutY(80);
