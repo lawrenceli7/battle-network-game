@@ -14,6 +14,7 @@ public class Swordsmen extends playerChar {
 		setElement(0);
 		setDMG(40);
 		setKills(0);
+		setLocation(1, 1);
 	}
 
 	public void ultAtk() { // activates ult

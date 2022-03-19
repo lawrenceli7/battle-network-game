@@ -102,8 +102,42 @@ public class battleGrid extends Grid {
 		}
 	}
 
-	public boolean isMoveable(int x, int y) { // checks for mobility in battle grid using the gridblock function
-		return blocks[x][y].isMoveable();
+	public boolean isMoveable(String act, playerChar a) { // checks for mobility in battle grid using the gridblock function
+		int[] current = a.getlocation();
+		System.out.println(current[0]);
+		System.out.println(current[1]);
+		if (act == "LF") {
+			if ((current[1] - 1) >= 0) {
+				return blocks[current[0]][current[1] - 1].isMoveable();
+			}
+			else {
+				return false;
+			}
+		}
+		else if (act == "UP") {
+			if ((current[1] - 1) >= 0) {
+				return blocks[current[0] - 1][current[1]].isMoveable();
+			}
+			else {
+				return false;
+			}
+		}
+		else if (act == "RT") {
+			if ((current[1] + 1) <= 2) {
+				return blocks[current[0]][current[1] + 1].isMoveable();
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			if ((current[1] + 1) <= 2) {
+				return blocks[current[0 + 1]][current[1]].isMoveable();
+			}
+			else {
+				return false;
+			}
+		}
 	}
 
 }

@@ -60,7 +60,7 @@ public class playerChar {
         this.kills = kills;
     }
     
-    public void setlocation(int a, int b) {
+    public void setLocation(int a, int b) {
         battlelocation[0] = a;
         battlelocation[1] = b;
     }
