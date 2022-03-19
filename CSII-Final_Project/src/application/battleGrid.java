@@ -104,11 +104,9 @@ public class battleGrid extends Grid {
 
 	public boolean isMoveable(String act, playerChar a) { // checks for mobility in battle grid using the gridblock function
 		int[] current = a.getlocation();
-		System.out.println(current[0]);
-		System.out.println(current[1]);
 		if (act == "LF") {
-			if ((current[1] - 1) >= 0) {
-				return blocks[current[0]][current[1] - 1].isMoveable();
+			if ((current[1] + 1) <= 2) {
+				return blocks[current[0] - 1][current[1]].isMoveable();
 			}
 			else {
 				return false;
@@ -116,7 +114,7 @@ public class battleGrid extends Grid {
 		}
 		else if (act == "UP") {
 			if ((current[1] - 1) >= 0) {
-				return blocks[current[0] - 1][current[1]].isMoveable();
+				return blocks[current[0]][current[1] - 1].isMoveable();
 			}
 			else {
 				return false;
@@ -124,7 +122,7 @@ public class battleGrid extends Grid {
 		}
 		else if (act == "RT") {
 			if ((current[1] + 1) <= 2) {
-				return blocks[current[0]][current[1] + 1].isMoveable();
+				return blocks[current[0] + 1][current[1]].isMoveable();
 			}
 			else {
 				return false;
@@ -132,11 +130,31 @@ public class battleGrid extends Grid {
 		}
 		else {
 			if ((current[1] + 1) <= 2) {
-				return blocks[current[0 + 1]][current[1]].isMoveable();
+				return blocks[current[0]][current[1] + 1].isMoveable();
 			}
 			else {
 				return false;
 			}
+		}
+	}
+	
+	public void moveEntity(String act, playerChar a) {
+		int[] current = a.getlocation();
+		if (act == "LF") {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0] - 1][current[1]].setPlayer(0);; //playerChar a
+		}
+		else if (act == "UP") {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0]][current[1] - 1].setPlayer(0);; //playerChar a
+		}
+		else if (act == "RT") {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0] + 1][current[1]].setPlayer(0); //playerChar a
+		}
+		else {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0]][current[1] + 1].setPlayer(0); //playerChar a
 		}
 	}
 

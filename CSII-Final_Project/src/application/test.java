@@ -15,13 +15,15 @@ public class test {
 		System.out.println("");
 
 		Swordsmen deez = new Swordsmen();
-		String act = "RT"; //Testing
+		String act = "LF"; //Testing
 		//String act = deez.action(1); Call through .action
 		System.out.println(battle.isMoveable(act, deez));
 		Boolean canMove = battle.isMoveable(act, deez);
 		if (canMove = true) {
-			
+			battle.moveEntity(act, deez);
+			battle.printGrid();
 		}
+		System.out.println("");
 
 		battleGrid battle2 = new battleGrid(6, 3);
 		battle2.playerSide(0);
