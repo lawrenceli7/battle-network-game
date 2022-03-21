@@ -146,7 +146,7 @@ public class battleGrid extends Grid {
 		}
 		else if (act == "UP") {
 			blocks[current[0]][current[1]].setPlayer(10);
-			blocks[current[0]][current[1] - 1].setPlayer(0);; //playerChar a
+			blocks[current[0]][current[1] - 1].setPlayer(0); //playerChar a
 		}
 		else if (act == "RT") {
 			blocks[current[0]][current[1]].setPlayer(10);
@@ -157,5 +157,22 @@ public class battleGrid extends Grid {
 			blocks[current[0]][current[1] + 1].setPlayer(0); //playerChar a
 		}
 	}
-
+	
+	public void moveEntity(int diff, singleShotAI e) {
+		int[] current = e.getlocation();
+		if (diff > 0) {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0]][current[1] + 1].setPlayer(0); //down
+		}
+		else {
+			blocks[current[0]][current[1]].setPlayer(10);
+			blocks[current[0]][current[1] - 1].setPlayer(0); //up
+		}
+	}
+	
+	public int playerDistance(playerChar p, singleShotAI e) {
+		int[] plocate = p.getlocation();
+		int[] elocate = e.getlocation();
+		return plocate[0] - elocate[0];
+	}
 }
