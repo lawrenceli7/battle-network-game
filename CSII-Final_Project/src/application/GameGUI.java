@@ -78,7 +78,7 @@ public class GameGUI extends Application {
 			logo1.setFitWidth(580);
 			logo1.setFitHeight(520);
 			start.setId("whiteBtnText");
-			start.setLayoutX(580);
+			start.setLayoutX(480);
 			start.setLayoutY(600);
 			DropShadow ds1 = new DropShadow(20, Color.BLUE);
 			start.setVisible(true);
@@ -146,7 +146,7 @@ public class GameGUI extends Application {
 		// Displaying text for player option and setting the dimensions onto the screen
 		Text playerOption = new Text();
 		playerOption.setText("CHOOSE PLAYER TYPE");
-		playerOption.setX(600);
+		playerOption.setX(280);
 		playerOption.setY(100);
 		playerOption.setId("playerOptionText");
 
@@ -209,9 +209,9 @@ public class GameGUI extends Application {
 
 		pane.setOnMouseEntered(event -> {
 			pane.getChildren().remove(1);
-			Text btnText = new Text(type);
-			btnText.setId("whiteBtnText");
-			pane.getChildren().add(btnText);
+			Text buttonText = new Text(type);
+			buttonText.setId("whiteBtnText");
+			pane.getChildren().add(buttonText);
 			charInfoBox(type);
 			charInfo.setVisible(true);
 			charInfoTwo.setVisible(true);
@@ -219,9 +219,9 @@ public class GameGUI extends Application {
 
 		pane.setOnMouseExited(event -> {
 			pane.getChildren().remove(1);
-			Text btnText = new Text(type);
-			btnText.setId("btnText");
-			pane.getChildren().add(btnText);
+			Text buttonText = new Text(type);
+			buttonText.setId("buttonText");
+			pane.getChildren().add(buttonText);
 			charInfo.setVisible(false);
 			charInfoTwo.setVisible(false);
 		});
@@ -229,6 +229,129 @@ public class GameGUI extends Application {
 	}
 
 	private VBox charInfoBox(String type) {
+		charInfo.setId("charInfoBox");
+		charInfoTwo.setId("charInfoBox");
+		
+		if (type.equals("Swordsmen")) {
+			charInfo.getChildren().clear();
+			charInfo.setLayoutX(180);
+			charInfo.setLayoutY(180);
+			charInfoTwo.getChildren().clear();
+			charInfoTwo.setLayoutX(820);
+			charInfoTwo.setLayoutY(180);
+			
+			Text info = new Text();
+			
+			info.setText("HP = 100" + "\n" 
+					+ "Speed = 5" + "\n" 
+					+ "Element = none" + "\n" 
+					+ "Weapon Damage = 40");
+			charInfo.getChildren().add(info);
+			
+			Text infoTwo = new Text();
+			infoTwo.setText("Swordsmen are the masters of the sword as they are" + "\n"
+					+ "strong both offensively and defensively, conquering" + "\n"
+					+ "battlefields and providing protection for teammates." + "\n"
+					+ "Swordsmen do not demonstrate physical strength" + "\n"
+					+ "unwillingly to their enemies, for that is not the way of" + "\n" + "a Swordsman.");
+			charInfoTwo.getChildren().add(infoTwo);
+			
+		} else if (type.equals("Mage")) {
+			charInfo.getChildren().clear();
+			charInfo.setLayoutX(180);
+			charInfo.setLayoutY(280);
+			charInfoTwo.getChildren().clear();
+			charInfoTwo.setLayoutX(800);
+			charInfoTwo.setLayoutY(280);
+			
+			Text info = new Text();
+			
+			info.setText("HP = 120" + "\n" 
+					+ "Speed = 0" + "\n" 
+					+ "Element = 1" + "\n" 
+					+ "Weapon Damage = 0");
+			charInfo.getChildren().add(info);
+			
+			Text infoTwo = new Text();
+			infoTwo.setText("The mage is a damage-dealing spell-caster that specializes" + "\n"
+					+ "in burst damage and area of effect spells. Mages are well" + "\n"
+					+ "known for their formidable damage output, as well as their" + "\n"
+					+ "range of crowd control abilities.");
+			charInfoTwo.getChildren().add(infoTwo);
+			
+		} else if (type.equals("Druid")) {
+			charInfo.getChildren().clear();
+			charInfo.setLayoutX(180);
+			charInfo.setLayoutY(390);
+			charInfoTwo.getChildren().clear();
+			charInfoTwo.setLayoutX(790);
+			charInfoTwo.setLayoutY(385);
+			
+			Text info = new Text();
+			
+			info.setText("HP = 150" + "\n" 
+					+ "Speed = 0" + "\n" 
+					+ "Element = 3" + "\n" 
+					+ "Weapon Damage = 0");
+			charInfo.getChildren().add(info);
+			
+			Text infoTwo = new Text();
+			infoTwo.setText("Whether calling on the elemental forces of nature or" + "\n"
+					+ "emulating the creatures of the animal world, druids are an" + "\n"
+					+ "embodiment of nature's resilience, cunning, and fury. They" + "\n"
+					+ "claim no mastery over nature. Instead, they see themselves as" + "\n"
+					+ "extensions of nature's indomitable will.");
+			charInfoTwo.getChildren().add(infoTwo);
+			
+		} else if (type.equals("Gunner")) {
+			charInfo.getChildren().clear();
+			charInfo.setLayoutX(180);
+			charInfo.setLayoutY(500);
+			charInfoTwo.getChildren().clear();
+			charInfoTwo.setLayoutX(785);
+			charInfoTwo.setLayoutY(495);
+			
+			Text info = new Text();
+			
+			info.setText("HP = 140" + "\n" 
+					+ "Speed = 0" + "\n" 
+					+ "Element = 4" + "\n" 
+					+ "Weapon Damage = 0");
+			charInfo.getChildren().add(info);
+			
+			Text infoTwo = new Text();
+			infoTwo.setText("The ability to generate electricity. Sub-power of Electricity" + "\n"
+					+ "Manipulation. Variation of Elemental Generation and Energy" + "\n"
+					+ "Generation. The user can generate electricity, the energy" + "\n"
+					+ "emitted from charged particles. Users can become creative" + "\n"
+					+ "and use it in various methods.");
+			charInfoTwo.getChildren().add(infoTwo);
+			
+		} else if (type.equals("Martial Artist")) {
+			charInfo.getChildren().clear();
+			charInfo.setLayoutX(180);
+			charInfo.setLayoutY(600);
+			charInfoTwo.getChildren().clear();
+			charInfoTwo.setLayoutX(785);
+			charInfoTwo.setLayoutY(600);
+			
+			Text info = new Text();
+			
+			info.setText("HP = 110" + "\n" 
+					+ "Speed = 0" + "\n" 
+					+ "Element = 2" + "\n" 
+					+ "Weapon Damage = 0");
+			charInfo.getChildren().add(info);
+			
+			Text infoTwo = new Text();
+			infoTwo.setText("Martial arts are codified systems and traditions of combat" + "\n"
+					+ "practiced for a number of reasons such as self-defense;" + "\n"
+					+ "military and law enforcement applications; competition;" + "\n"
+					+ "physical, mental, and spiritual development; entertainment;" + "\n"
+					+ "and the preservation of a nation's intangible cultural heritage.");
+			charInfoTwo.getChildren().add(infoTwo);
+			
+		}
 		return charInfo;
 
 	}
