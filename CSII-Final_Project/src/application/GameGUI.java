@@ -1,16 +1,21 @@
 package application;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
@@ -28,6 +33,8 @@ public class GameGUI extends Application {
 	private VBox charInfoTwo;
 	private MediaPlayer openingMusic;
 	private Music music;
+	private String playerName;
+	private playerChar player;
 
 	public GameGUI() {
 		isSwordsmen = false;
@@ -39,6 +46,7 @@ public class GameGUI extends Application {
 		charInfoTwo = new VBox(15);
 		music = new Music();
 		openingMusic = music.openingMusic();
+		player = new playerChar();
 	}
 
 	@Override
@@ -205,6 +213,7 @@ public class GameGUI extends Application {
 			} else if (type.equals("Martial Artist")) {
 				setMartialArtist(true);
 			}
+			playerNameScreen(primaryStage);
 		});
 
 		pane.setOnMouseEntered(event -> {
@@ -241,7 +250,7 @@ public class GameGUI extends Application {
 			charInfoTwo.setLayoutY(180);
 			
 			Text info = new Text();
-			
+			playerChar swordsmen = new Swordsmen();
 			info.setText("HP = 100" + "\n" 
 					+ "Speed = 5" + "\n" 
 					+ "Element = none" + "\n" 
@@ -265,7 +274,7 @@ public class GameGUI extends Application {
 			charInfoTwo.setLayoutY(280);
 			
 			Text info = new Text();
-			
+			playerChar mage = new Mage();
 			info.setText("HP = 120" + "\n" 
 					+ "Speed = 0" + "\n" 
 					+ "Element = 1" + "\n" 
@@ -288,7 +297,7 @@ public class GameGUI extends Application {
 			charInfoTwo.setLayoutY(385);
 			
 			Text info = new Text();
-			
+			playerChar druid = new Druid();
 			info.setText("HP = 150" + "\n" 
 					+ "Speed = 0" + "\n" 
 					+ "Element = 3" + "\n" 
@@ -312,7 +321,7 @@ public class GameGUI extends Application {
 			charInfoTwo.setLayoutY(495);
 			
 			Text info = new Text();
-			
+			playerChar gunner = new Gunner();
 			info.setText("HP = 140" + "\n" 
 					+ "Speed = 0" + "\n" 
 					+ "Element = 4" + "\n" 
@@ -336,7 +345,7 @@ public class GameGUI extends Application {
 			charInfoTwo.setLayoutY(600);
 			
 			Text info = new Text();
-			
+			playerChar martial_artist = new Martial_Artist();
 			info.setText("HP = 110" + "\n" 
 					+ "Speed = 0" + "\n" 
 					+ "Element = 2" + "\n" 
@@ -354,6 +363,89 @@ public class GameGUI extends Application {
 		}
 		return charInfo;
 
+	}
+	
+	private void playerNameScreen(Stage primaryStage) {
+		GridPane getName = new GridPane();
+		
+		Label charName = new Label("Character Name: ");
+		charName.setId("characterNameText");
+		TextField charNameBox = new TextField();
+		
+		Button submitBtn = new Button("PLAY");
+		submitBtn.setId("yellowBtn");
+		submitBtn.setLayoutX(1050);
+		submitBtn.setLayoutY(600);
+		
+		Button backBtn = new Button("BACK");
+		backBtn.setId("yellowBtn");
+		backBtn.setLayoutX(100);
+		backBtn.setLayoutY(600);
+		
+		backBtn.setOnAction(event -> {chooseCharacterScreen(primaryStage);
+		});
+		
+		Text error = new Text();
+
+		submitBtn.setOnMouseClicked(event -> {
+			if (charNameBox.getText().isEmpty() == true) {
+				error.setId("errorText");
+				error.setText("Please Enter A Name");
+			} else {
+				openingMusic.stop();
+				String name = charNameBox.getText();
+				setplayerName(name);
+				createPlayer();
+				battleScreen(primaryStage);
+			}
+		});
+		
+		getName.add(charName, 0, 0);
+		getName.add(charNameBox, 0, 1);
+		getName.add(error, 0, 2);
+		GridPane.setHalignment(error, HPos.CENTER);
+		
+		for (int i = 0; i < 3; i++) {
+			RowConstraints row = new RowConstraints(40);
+			getName.getRowConstraints().add(row);
+		}
+		
+		getName.setId("getNameGrid");
+		getName.setLayoutX(430);
+		getName.setLayoutY(250);
+		;
+		
+		Pane display = new Pane();
+		display.getChildren().addAll(getName, backBtn, submitBtn);
+		display.setId("startTwoBackground");
+		
+		Scene chooseCharName = new Scene(display, 1280, 720);
+		chooseCharName.getStylesheets().add(getClass().getResource("GameGUI.css").toExternalForm());
+		primaryStage.setScene(chooseCharName);
+		primaryStage.show();
+	}
+	
+	private void createPlayer() {
+		if (isSwordsmen == true) {
+			player = new Swordsmen();
+			player.setName(playerName);
+		} else if (isMage == true) {
+			player = new Mage();
+			player.setName(playerName);
+		} else if (isDruid == true) {
+			player = new Druid();
+			player.setName(playerName);
+		} else if (isGunner == true) {
+			player = new Gunner();
+			player.setName(playerName);
+		} else if (isMartialArtist == true) {
+			player = new Martial_Artist();
+			player.setName(playerName);
+		}
+	}
+	
+	public void battleScreen(Stage primaryStage) {
+		primaryStage.show();
 	}
 
 	private void run(GraphicsContext gc) {
@@ -398,6 +490,14 @@ public class GameGUI extends Application {
 
 	private void setMartialArtist(boolean isMartialArtist) {
 		this.isMartialArtist = isMartialArtist;
+	}
+	
+	private String getplayerName() {
+		return playerName;
+	}
+	
+	public void setplayerName(String playerName) {
+		this.playerName = playerName;
 	}
 
 	public static void main(String[] args) {

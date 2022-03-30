@@ -43,3 +43,56 @@
 	-fx-font-size: 30px;
 	-fx-font-weight: bold;
 }
+
+#characterNameText {
+	-fx-text-fill: black;
+	-fx-font-family: helvetica;
+	-fx-font-size: 50px;
+	-fx-font-weight: bold;
+	-fx-effect:dropshadow(gaussian, rgba(255,255,255), 5, 0.5, 0.0, 0.0); 
+}
+
+#errorText {
+	-fx-fill: white;
+	-fx-stroke: black;
+	-fx-stroke-width: 0.2;
+	-fx-font-family: serif;
+	-fx-font-size: 30px;
+	-fx-font-weight: bold;
+	-fx-effect:dropshadow(gaussian, rgba(255,0,0),10, 0.5, 0.0, 0.0); 
+}
+
+#yellowBtn {
+	-fx-padding: 10 15 13 15;
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 6;
+    -fx-background-color: 
+        radial-gradient(center 50% 50%, radius 100%, #FFD800, #B8860B);
+   	-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+   	-fx-font-weight: bold;
+	-fx-font-family: serif;
+	-fx-text-fill: black;
+    -fx-font-size: 20px;   
+}
+  
+#yellowBtn:hover {
+    -fx-background-color: 
+        linear-gradient(from 0% 93% to 0% 100%, #A0522D 0%, #8B4513 100%),
+        #A0522D,
+        #B8860B,
+        radial-gradient(center 50% 50%, radius 100%, #FFFF00, #DAA520);
+}
+
+#yellowBtn:pressed {
+    -fx-padding: 10 15 13 15;
+    -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+}
+
+#getNameGrid {
+	-fx-vgap:10;
+	-fx-hgap:10;
+	-fx-padding:10;
+	-fx-alignment: center;
+	-fx-size: 600px,400px;
+}
+
