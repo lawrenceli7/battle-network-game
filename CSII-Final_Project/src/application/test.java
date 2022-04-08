@@ -14,6 +14,7 @@ public class test {
 		battle.printGrid();
 		System.out.println("");
 
+		// player movement testing
 		Swordsmen deez = new Swordsmen();
 		String act = "LF"; //Testing
 		//String act = deez.action(1); Call through .action

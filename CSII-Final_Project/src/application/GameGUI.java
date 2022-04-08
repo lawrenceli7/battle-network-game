@@ -1,5 +1,7 @@
 package application;
 
+import java.security.acl.Group;
+
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -21,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
 
 public class GameGUI extends Application {
 
@@ -445,6 +449,36 @@ public class GameGUI extends Application {
 	}
 	
 	public void battleScreen(Stage primaryStage) {
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setLayoutX(315);
+		grid.setLayoutY(200);
+		for (int i = 0; i<6; i++) {
+			for (int x = 0; x<3; x++) { 
+				Rectangle r = new Rectangle(100, 100);
+				r.setOpacity(0.5);
+				if (i<3) {
+					r.setFill(Color.ORANGE);
+				}
+				else {
+					r.setFill(Color.LIGHTBLUE);
+				}
+				grid.add(r, i, x);
+			}
+		}
+		
+		battleGrid battle = new battleGrid(6,3);
+		battle.playerSide(0);
+		battle.enemyGen('S', 'G', 'R', player.getHP());
+		
+		Pane display = new Pane();
+		display.getChildren().addAll(grid);
+		display.setId("startTwoBackground");
+		
+		Scene battleScreen = new Scene(display, 1280, 720);
+		battleScreen.getStylesheets().add(getClass().getResource("GameGUI.css").toExternalForm());
+		primaryStage.setScene(battleScreen);
 		primaryStage.show();
 	}
 

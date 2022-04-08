@@ -2,6 +2,8 @@ package application;
 
 public class GridBlock {
 	private int side = 10; // 10 being placeholders simply for the hasXYZ methods to work
+	private int windowX = 0;
+	private int windowY = 0;
 	private char enemyType = '1';
 	private int playerType = 10;
 	private int obstacleType = 10;
@@ -31,6 +33,14 @@ public class GridBlock {
 	public void setLevel(int level) {
 		this.enemyLevel = level;
 	}
+	
+	public void setX(int x) {
+		this.windowX = x;
+	}
+	
+	public void setY(int y) {
+		this.windowY = y;
+	}
 
 	public int getSide() { // retrieves data
 		return side;
@@ -50,6 +60,14 @@ public class GridBlock {
 
 	public int getLevel() {
 		return enemyLevel;
+	}
+	
+	public int getX() {
+		return windowX;
+	}
+	
+	public int getY() {
+		return windowY;
 	}
 
 	public boolean hasPlayer() {

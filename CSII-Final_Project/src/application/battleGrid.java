@@ -8,9 +8,13 @@ public class battleGrid extends Grid {
 		super();
 		this.blocks = new GridBlock[x][y];
 		// May change later when
-		for (int r = 0; r < x; r++)
-			for (int c = 0; c < y; c++)
+		for (int r = 0; r < x; r++) {
+			for (int c = 0; c < y; c++) {
 				blocks[r][c] = new GridBlock();
+				blocks[r][c].setX(315+(110*r));
+				blocks[r][c].setY(200+(110*c));
+			}
+		}
 	}
 
 	public void playerSide(int player) {
