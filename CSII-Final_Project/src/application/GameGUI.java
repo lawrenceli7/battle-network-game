@@ -1,6 +1,7 @@
 package application;
 
 import java.security.acl.Group;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.geometry.HPos;
@@ -22,12 +23,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
 
 public class GameGUI extends Application {
 
+	public ArrayList<playerChar> enemies;
 	private boolean isSwordsmen;
 	private boolean isMage;
 	private boolean isDruid;
@@ -39,7 +43,12 @@ public class GameGUI extends Application {
 	private Music music;
 	private String playerName;
 	private playerChar player;
-
+	private VBox stats;
+	private Boolean myTurn = true;
+	private int enemyCount = 0;
+	private int emptyCount = 0;
+	private int enemyActionsTaken = 0;
+	
 	public GameGUI() {
 		isSwordsmen = false;
 		isMage = false;
@@ -48,6 +57,7 @@ public class GameGUI extends Application {
 		isMartialArtist = false;
 		charInfo = new VBox(15);
 		charInfoTwo = new VBox(15);
+		stats = new VBox(15);
 		music = new Music();
 		openingMusic = music.openingMusic();
 		player = new playerChar();
@@ -449,36 +459,784 @@ public class GameGUI extends Application {
 	}
 	
 	public void battleScreen(Stage primaryStage) {
+		Pane display = new Pane();
+		display.setId("startTwoBackground");
+		
+		// creates blue and orange battle grid
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
-		grid.setLayoutX(315);
-		grid.setLayoutY(200);
+		grid.setLayoutX(15);
+		grid.setLayoutY(15);
 		for (int i = 0; i<6; i++) {
 			for (int x = 0; x<3; x++) { 
-				Rectangle r = new Rectangle(100, 100);
+				Rectangle r = new Rectangle(200, 150);
 				r.setOpacity(0.5);
 				if (i<3) {
-					r.setFill(Color.ORANGE);
+					r.setFill(Color.LIGHTBLUE);
 				}
 				else {
-					r.setFill(Color.LIGHTBLUE);
+					r.setFill(Color.ORANGE);
 				}
 				grid.add(r, i, x);
 			}
 		}
+		display.getChildren().add(grid);
 		
+		// generates battle
 		battleGrid battle = new battleGrid(6,3);
 		battle.playerSide(0);
-		battle.enemyGen('S', 'G', 'R', player.getHP());
+		battle.enemyGen('R', 'G', 'S', player.getHP());
+		battle.spawnObstacle(player.getHP());
 		
-		Pane display = new Pane();
-		display.getChildren().addAll(grid);
-		display.setId("startTwoBackground");
+		// draws action box for entities
+		Rectangle actionBoxB = new Rectangle(1180, 200);
+		actionBoxB.setLayoutX(50);
+		actionBoxB.setLayoutY(505);
+		actionBoxB.setFill(Color.LIGHTGREY);
+		actionBoxB.setStroke(Color.BLACK);
+		actionBoxB.setStrokeWidth(10);
+		actionBoxB.setId("Action Box");
+		display.getChildren().add(actionBoxB);
+		
+		// fills action box
+				Button upButton = new Button("Up");
+				upButton.setId("Move Up Button");
+				upButton.setMinWidth(50);
+				upButton.setMinHeight(50);
+				upButton.setLayoutX(945);
+				upButton.setLayoutY(550);
+				
+				Button leftButton = new Button("Left");
+				leftButton.setId("Move Left Button");
+				leftButton.setMinWidth(50);
+				leftButton.setMinHeight(50);
+				leftButton.setLayoutX(885);
+				leftButton.setLayoutY(575);
+				
+				Button downButton = new Button("Down");
+				downButton.setId("Move Down Button");
+				downButton.setMinWidth(50);
+				downButton.setMinHeight(50);
+				downButton.setLayoutX(945);
+				downButton.setLayoutY(610);
+
+				Button rightButton = new Button("Right");
+				rightButton.setId("Move Right Button");
+				rightButton.setMinWidth(50);
+				rightButton.setMinHeight(50);
+				rightButton.setLayoutX(1005);
+				rightButton.setLayoutY(575);
+				
+				Button attackButton = new Button("Attack");
+				attackButton.setId("Attack Button");
+				attackButton.setMinWidth(100);
+				attackButton.setMinHeight(100);
+				attackButton.setLayoutX(1065);
+				attackButton.setLayoutY(555);
+				display.getChildren().addAll(upButton, leftButton, downButton, rightButton, attackButton);
+		
+		// puts entities image on grid pane
+		for (int r=0;r<6;r++) {
+			for (int c=0;c<3;c++) { //player
+				if (battle.blocks[r][c].getPlayer() == 0) {
+					Image playerButton = new Image("player.png");
+					ImageView playerButton1 = new ImageView(playerButton);
+					playerButton1.setLayoutX(battle.blocks[r][c].getX()+0);
+					playerButton1.setLayoutY(battle.blocks[r][c].getY()-25);
+					playerButton1.setFitWidth(200);
+					playerButton1.setFitHeight(200);
+					playerButton1.setId("Player Enity");
+					DropShadow ds = new DropShadow(10, Color.BLACK);
+					playerButton1.setEffect(ds);
+					display.getChildren().add(playerButton1);
+					player.setLocation(r, c);
+					
+					// Performs Actions
+					upButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("UP", player) && myTurn == true) {
+							battle.moveEntity("UP", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0],i[1]-1);
+							playerButton1.setLayoutY(playerButton1.getLayoutY()-150);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					downButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("", player) && myTurn == true) {
+							battle.moveEntity("", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0],i[1]+1);
+							playerButton1.setLayoutY(playerButton1.getLayoutY()+150);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					leftButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("LF", player) && myTurn == true) {
+							battle.moveEntity("LF", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0]-1,i[1]);
+							playerButton1.setLayoutX(playerButton1.getLayoutX()-200);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					rightButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("RT", player) && myTurn == true) {
+							battle.moveEntity("RT", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0]+1,i[1]);
+							playerButton1.setLayoutX(playerButton1.getLayoutX()+200);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					// stat display
+					playerButton1.setOnMouseEntered(event ->{
+						Text stat = new Text();
+						stat.setText(
+								"Name: " + player.getName() + "\n" +
+								"Health: " + player.getHP() + "\n" +
+								"Damage: " + player.getDMG());
+						stat.setFont(Font.font(45));
+						stats.getChildren().add(stat);
+						stats.setVisible(true);
+					});
+					playerButton1.setOnMouseExited(event ->{
+						stats.getChildren().clear();
+						stats.setVisible(false);
+					});
+				}//rat
+				else if (battle.blocks[r][c].getEnemy() != '1') {
+					if (battle.blocks[r][c].getEnemy() == 'R') {
+					Image enemyButton = new Image("rat.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+10);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(180);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Rat");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						enemyCount++;
+						
+						if (battle.blocks[r][c].getEntity().isDead()) {
+							battle.blocks[r][c].setEnemy('1');
+							display.getChildren().remove(battle.blocks[r][c].getDisplayIndex());
+							primaryStage.show();
+						}
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}//goblin
+					else if (battle.blocks[r][c].getEnemy() == 'G') {
+						Image enemyButton = new Image("goblin.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+15);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(170);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Goblin");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						enemyCount++;
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}//skeleton
+					else if (battle.blocks[r][c].getEnemy() == 'S') {
+						Image enemyButton = new Image("skeleton.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+25);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY());
+						enemyButton1.setFitWidth(150);
+						enemyButton1.setFitHeight(150);
+						enemyButton1.setId("Skeleton");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						enemyCount++;
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}//boss
+					else {
+						Image enemyButton = new Image("boss.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+40);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(120);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Boss");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						enemyCount++;
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+						}
+				}//obstacle
+				else if (battle.blocks[r][c].getObstacle() == 6) {
+					Image obstacleButton = new Image("obstacle.png");
+					ImageView obstacleButton1 = new ImageView(obstacleButton);
+					obstacleButton1.setLayoutX(battle.blocks[r][c].getX()+0);
+					obstacleButton1.setLayoutY(battle.blocks[r][c].getY());
+					obstacleButton1.setFitWidth(200);
+					obstacleButton1.setFitHeight(150);
+					obstacleButton1.setId("Rock");
+					DropShadow ds = new DropShadow(10, Color.BLACK);
+					obstacleButton1.setEffect(ds);
+					display.getChildren().add(obstacleButton1);
+					//stat display
+					obstacleButton1.setOnMouseEntered(event ->{
+						Text stat = new Text();
+						stat.setText(
+								"Name: Rock\n" +
+								"Health: 100\n" +
+								"Damage: 0");
+						stat.setFont(Font.font(45));
+						stats.getChildren().add(stat);
+						stats.setVisible(true);
+					});
+					obstacleButton1.setOnMouseExited(event ->{
+						stats.getChildren().clear();
+						stats.setVisible(false);
+					});
+				}
+			}
+		}
+		
+		attackButton.setOnMouseClicked(event ->{
+			if (myTurn == true) {
+				int[] q = player.getlocation();
+				for (int h = 0; h < 6; h++) {
+					if (battle.blocks[h][q[1]].hasEnemy()) {
+						battle.blocks[h][q[1]].getEntity().setHP(battle.blocks[h][q[1]].getEntity().getHP()-player.getDMG());
+						if (battle.blocks[h][q[1]].getEntity().isDead()) {
+							battle.blocks[h][q[1]].setEnemy('1');
+							enemyCount--;
+							loopBattleStage(battle, primaryStage);
+						} 
+					}
+				}
+				enemyCount = 0;
+				myTurn = false;
+				loopBattleStage(battle, primaryStage);
+			}
+		});
+
+		Rectangle turn = new Rectangle(160, 160);
+		turn.setLayoutX(560);
+		turn.setLayoutY(525);
+		Text turnText = new Text();
+		turnText.setLayoutX(570);
+		turnText.setLayoutY(605);
+		turnText.setFont(Font.font("verdana", FontWeight.BOLD, 20));
+	//	if (myTurn == true) {
+			turn.setFill(Color.LAWNGREEN);
+			turnText.setText("YOUR TURN");
+	/*	}
+		else {
+			turn.setFill(Color.RED);
+			turnText.setText("ENEMY TURN");
+			if (enemyCount - enemyActionsTaken == 0) {
+				myTurn = true;
+				enemyActionsTaken = 0;
+				enemyCount = 0;
+				loopBattleStage(battle, primaryStage);
+			}
+			else {
+				runEnemyTurn(battle, display);
+				enemyCount = 0;
+				loopBattleStage(battle, primaryStage);
+			}*/
+	//	}
+		turn.setStroke(Color.BLACK);
+		turn.setStrokeWidth(5);
+		display.getChildren().addAll(turn, turnText);
+		
+		stats.setLayoutX(60);
+		stats.setLayoutY(515);
+		display.getChildren().add(stats);
 		
 		Scene battleScreen = new Scene(display, 1280, 720);
 		battleScreen.getStylesheets().add(getClass().getResource("GameGUI.css").toExternalForm());
 		primaryStage.setScene(battleScreen);
+		primaryStage.show();
+	}
+	
+	private void loopBattleStage(battleGrid battle, Stage primaryStage) {
+		
+		Pane display = new Pane();
+		display.setId("startTwoBackground");
+		
+		// creates blue and orange battle grid
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setLayoutX(15);
+		grid.setLayoutY(15);
+		for (int i = 0; i<6; i++) {
+			for (int x = 0; x<3; x++) { 
+				Rectangle r = new Rectangle(200, 150);
+				r.setOpacity(0.5);
+				if (i<3) {
+					r.setFill(Color.LIGHTBLUE);
+				}
+				else {
+					r.setFill(Color.ORANGE);
+				}
+				grid.add(r, i, x);
+			}
+		}
+		display.getChildren().add(grid);
+		
+		Rectangle actionBoxB = new Rectangle(1180, 200);
+		actionBoxB.setLayoutX(50);
+		actionBoxB.setLayoutY(505);
+		actionBoxB.setFill(Color.LIGHTGREY);
+		actionBoxB.setStroke(Color.BLACK);
+		actionBoxB.setStrokeWidth(10);
+		actionBoxB.setId("Action Box");
+		display.getChildren().add(actionBoxB);
+		
+		// fills action box
+				Button upButton = new Button("Up");
+				upButton.setId("Move Up Button");
+				upButton.setMinWidth(50);
+				upButton.setMinHeight(50);
+				upButton.setLayoutX(945);
+				upButton.setLayoutY(550);
+				
+				Button leftButton = new Button("Left");
+				leftButton.setId("Move Left Button");
+				leftButton.setMinWidth(50);
+				leftButton.setMinHeight(50);
+				leftButton.setLayoutX(885);
+				leftButton.setLayoutY(575);
+				
+				Button downButton = new Button("Down");
+				downButton.setId("Move Down Button");
+				downButton.setMinWidth(50);
+				downButton.setMinHeight(50);
+				downButton.setLayoutX(945);
+				downButton.setLayoutY(610);
+
+				Button rightButton = new Button("Right");
+				rightButton.setId("Move Right Button");
+				rightButton.setMinWidth(50);
+				rightButton.setMinHeight(50);
+				rightButton.setLayoutX(1005);
+				rightButton.setLayoutY(575);
+				
+				Button attackButton = new Button("Attack");
+				attackButton.setId("Attack Button");
+				attackButton.setMinWidth(100);
+				attackButton.setMinHeight(100);
+				attackButton.setLayoutX(1065);
+				attackButton.setLayoutY(555);
+				display.getChildren().addAll(upButton, leftButton, downButton, rightButton, attackButton);
+		
+		// puts entities image on grid pane
+		for (int r=0;r<6;r++) {
+			for (int c=0;c<3;c++) {
+				if (battle.blocks[r][c].getPlayer() == 0) {
+					Image playerButton = new Image("player.png");
+					ImageView playerButton1 = new ImageView(playerButton);
+					playerButton1.setLayoutX(battle.blocks[r][c].getX()+0);
+					playerButton1.setLayoutY(battle.blocks[r][c].getY()-25);
+					playerButton1.setFitWidth(200);
+					playerButton1.setFitHeight(200);
+					playerButton1.setId("Player Enity");
+					DropShadow ds = new DropShadow(10, Color.BLACK);
+					playerButton1.setEffect(ds);
+					display.getChildren().add(playerButton1);
+					player.setLocation(r, c);
+					
+					// Performs Actions
+					upButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("UP", player) && myTurn == true) {
+							battle.moveEntity("UP", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0],i[1]-1);
+							playerButton1.setLayoutY(playerButton1.getLayoutY()-150);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					downButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("", player) && myTurn == true) {
+							battle.moveEntity("", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0],i[1]+1);
+							playerButton1.setLayoutY(playerButton1.getLayoutY()+150);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					leftButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("LF", player) && myTurn == true) {
+							battle.moveEntity("LF", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0]-1,i[1]);
+							playerButton1.setLayoutX(playerButton1.getLayoutX()-200);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					rightButton.setOnMouseClicked(event ->{
+						if (battle.isMoveable("RT", player) && myTurn == true) {
+							battle.moveEntity("RT", player);
+							int i[] = player.getlocation();
+							player.setLocation(i[0]+1,i[1]);
+							playerButton1.setLayoutX(playerButton1.getLayoutX()+200);
+							enemyCount = 0;
+							myTurn = false;
+							loopBattleStage(battle, primaryStage);
+						}
+					});
+					// stat display
+					playerButton1.setOnMouseEntered(event ->{
+						Text stat = new Text();
+						stat.setText(
+								"Name: " + player.getName() + "\n" +
+								"Health: " + player.getHP() + "\n" +
+								"Damage: " + player.getDMG());
+						stat.setFont(Font.font(45));
+						stats.getChildren().add(stat);
+						stats.setVisible(true);
+					});
+					playerButton1.setOnMouseExited(event ->{
+						stats.getChildren().clear();
+						stats.setVisible(false);
+					});
+				}
+				else if (battle.blocks[r][c].getEnemy() != '1') {
+					if (battle.blocks[r][c].getEnemy() == 'R') {
+					Image enemyButton = new Image("rat.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+10);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(180);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Rat");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						
+						if (battle.blocks[r][c].getEntity().isDead()) {
+							battle.blocks[r][c].setEnemy('1');
+							display.getChildren().remove(battle.blocks[r][c].getDisplayIndex());
+							primaryStage.show();
+						}
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}
+					else if (battle.blocks[r][c].getEnemy() == 'G') {
+						Image enemyButton = new Image("goblin.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+15);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(170);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Goblin");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}
+					else if (battle.blocks[r][c].getEnemy() == 'S') {
+						Image enemyButton = new Image("skeleton.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+25);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY());
+						enemyButton1.setFitWidth(150);
+						enemyButton1.setFitHeight(150);
+						enemyButton1.setId("Skeleton");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}
+					else {
+						Image enemyButton = new Image("boss.png");
+						ImageView enemyButton1 = new ImageView(enemyButton);
+						enemyButton1.setLayoutX(battle.blocks[r][c].getX()+40);
+						enemyButton1.setLayoutY(battle.blocks[r][c].getY()+10);
+						enemyButton1.setFitWidth(120);
+						enemyButton1.setFitHeight(130);
+						enemyButton1.setId("Boss");
+						DropShadow ds = new DropShadow(10, Color.BLACK);
+						enemyButton1.setEffect(ds);
+						display.getChildren().add(enemyButton1);
+						battle.blocks[r][c].setDisplayIndex(display.getChildren().size()-1);
+						
+						// stat display
+						enemyButton1.setOnMouseEntered(event ->{
+							Text stat = new Text();
+							stat.setText(
+									"Name: " + enemyButton1.getId() + "\n" +
+									"Health: 40" + "\n" +
+									"Damage: 20");
+							stat.setFont(Font.font(45));
+							stats.getChildren().add(stat);
+							stats.setVisible(true);
+						});
+						enemyButton1.setOnMouseExited(event ->{
+							stats.getChildren().clear();
+							stats.setVisible(false);
+						});
+					}
+				}
+				else if (battle.blocks[r][c].getObstacle() == 6) {
+					Image obstacleButton = new Image("obstacle.png");
+					ImageView obstacleButton1 = new ImageView(obstacleButton);
+					obstacleButton1.setLayoutX(battle.blocks[r][c].getX()+0);
+					obstacleButton1.setLayoutY(battle.blocks[r][c].getY());
+					obstacleButton1.setFitWidth(200);
+					obstacleButton1.setFitHeight(150);
+					obstacleButton1.setId("obstacleButton");
+					DropShadow ds = new DropShadow(10, Color.BLACK);
+					obstacleButton1.setEffect(ds);
+					display.getChildren().add(obstacleButton1);
+					//stat display
+					obstacleButton1.setOnMouseEntered(event ->{
+						Text stat = new Text();
+						stat.setText(
+								"Name: Rock\n" +
+								"Health: 100\n" +
+								"Damage: 0");
+						stat.setFont(Font.font(45));
+						stats.getChildren().add(stat);
+						stats.setVisible(true);
+					});
+					obstacleButton1.setOnMouseExited(event ->{
+						stats.getChildren().clear();
+						stats.setVisible(false);
+					});
+				}
+			}
+		}
+		
+		if (enemyCount == 0) {
+			endCard(primaryStage);
+		}
+
+		attackButton.setOnMouseClicked(event ->{
+			if (myTurn == true) {
+				int[] q = player.getlocation();
+				for (int h = 0; h < 6; h++) {
+					if (battle.blocks[h][q[1]].hasEnemy()) {
+						battle.blocks[h][q[1]].getEntity().setHP(battle.blocks[h][q[1]].getEntity().getHP()-player.getDMG());
+						if (battle.blocks[h][q[1]].getEntity().isDead()) {
+							battle.blocks[h][q[1]].setEnemy('1');
+							enemyCount--;
+							loopBattleStage(battle, primaryStage);
+						} 
+					}
+				}
+				enemyCount = 0;
+				myTurn = false;
+				loopBattleStage(battle, primaryStage);
+			}
+		});
+		
+		Rectangle turn = new Rectangle(160, 160);
+		turn.setLayoutX(560);
+		turn.setLayoutY(525);
+		Text turnText = new Text();
+		turnText.setLayoutX(570);
+		turnText.setLayoutY(605);
+		turnText.setFont(Font.font("verdana", FontWeight.BOLD, 20));
+		if (myTurn == true) {
+			turn.setFill(Color.LAWNGREEN);
+			turnText.setText("YOUR TURN");
+		}
+		else {
+			turn.setFill(Color.RED);
+			turnText.setText("ENEMY TURN");
+			if (enemyCount - enemyActionsTaken == 0) {
+				myTurn = true;
+				enemyActionsTaken = 0;
+				enemyCount = 0;
+				loopBattleStage(battle, primaryStage);
+			}
+			else {
+				runEnemyTurn(battle);
+				enemyCount = 0;
+				loopBattleStage(battle, primaryStage);
+			}
+		}
+		turn.setStroke(Color.BLACK);
+		turn.setStrokeWidth(5);
+		display.getChildren().addAll(turn, turnText);
+		
+		stats.setLayoutX(60);
+		stats.setLayoutY(515);
+		display.getChildren().add(stats);
+		
+		Scene battleScreen = new Scene(display, 1280, 720);
+		battleScreen.getStylesheets().add(getClass().getResource("GameGUI.css").toExternalForm());
+		primaryStage.setScene(battleScreen);
+		primaryStage.show();
+		
+	}
+	
+	private void runEnemyTurn(battleGrid battle) {
+		int taken = enemyActionsTaken;
+		for (int r=0;r<6;r++) {
+			for (int c=0;c<3;c++) {
+				if (battle.blocks[r][c].getEnemy() != '1') {
+					if (taken == 0) {
+						for (int f=0;f<3;f++) {
+							if (battle.blocks[f][c].getPlayer() != 10) { // attack
+								player.setHP(player.getHP()-battle.blocks[r][c].getEntity().getDMG());
+								enemyActionsTaken++;
+								emptyCount = 0;
+								return;
+							}
+							else if (emptyCount == 3) {
+								battle.moveEntity(player, battle.blocks[r][c].getEntity());
+								emptyCount = 0;
+								enemyActionsTaken++;
+								return;
+							}
+							else {
+								emptyCount++;
+							}
+						}
+					}
+					else {
+						taken--;
+					}
+				}
+			}
+		}
+	}
+	
+	public void endCard(Stage primaryStage) {
+		Pane display = new Pane();
+		display.setId("startTwoBackground");
+		
+		Rectangle test = new Rectangle(1000, 400);
+		display.getChildren().add(test);
+		
+		Scene endCard = new Scene(display, 1280, 720);
+		endCard.getStylesheets().add(getClass().getResource("GameGUI.css").toExternalForm());
+		primaryStage.setScene(endCard);
 		primaryStage.show();
 	}
 

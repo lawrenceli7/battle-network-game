@@ -11,8 +11,8 @@ public class battleGrid extends Grid {
 		for (int r = 0; r < x; r++) {
 			for (int c = 0; c < y; c++) {
 				blocks[r][c] = new GridBlock();
-				blocks[r][c].setX(315+(110*r));
-				blocks[r][c].setY(200+(110*c));
+				blocks[r][c].setX(15+(210*r));
+				blocks[r][c].setY(15+(160*c));
 			}
 		}
 	}
@@ -48,21 +48,24 @@ public class battleGrid extends Grid {
 					rng = Math.random() * (MAX_RNG - MIN_RNG + 1) + MIN_RNG;
 					if (rng >= 0 && rng < 40.0) {
 						blocks[i][j].setEnemy(enemy); // if statements with a new rng value in order to determine which
-														// of the three input enemy types spawn.
+						blocks[i][j].setEnemy("rat", i, j);// of the three input enemy types spawn.
 					} else if (rng >= 40 && rng < 70) {
 						blocks[i][j].setEnemy(enemy2);
+						blocks[i][j].setEnemy("goblin", i, j);
 					} else {
 						blocks[i][j].setEnemy(enemy3);
+						blocks[i][j].setEnemy("skeleton", i, j);
 					}
-
 					enemyCount++;
 				}
 			}
 		}
 		if (enemyCount == 0) {
 			blocks[3][2].setEnemy(enemy);
+			blocks[3][2].setEnemy("rat", 2, 3);
 			blocks[3][2].setLevel(2); // spawns 2 enemies if (somehow) at least one does not spawn.
 			blocks[5][0].setEnemy(enemy2);
+			blocks[5][0].setEnemy("goblin", 2, 3);
 			blocks[5][0].setLevel(2);
 		} else if (enemyCount < limit) { // assigns enemy level if spawn count is less than limit
 			for (int i = 3; i < blocks.length; i++) {
@@ -86,13 +89,14 @@ public class battleGrid extends Grid {
 	public void bossMaxEnemyGen(char enemy) {
 		blocks[4][1].setEnemy(enemy);
 		blocks[4][1].setLevel(4);
+		blocks[4][1].setEnemy("boss", 4, 1);
 	}
 
 	public void spawnObstacle(int health) {
 		if (health < 100) {
-			blocks[2][0].setObstacle(6);
+			blocks[0][2].setObstacle(6);
 		}
-		if (health <= 70 && health < 90 && blocks[3][2].hasEnemy() == false) {
+		if (health > 70 && health < 90 && blocks[3][2].hasEnemy() == false) {
 			blocks[3][2].setObstacle(6);
 		}
 	}
@@ -109,7 +113,7 @@ public class battleGrid extends Grid {
 	public boolean isMoveable(String act, playerChar a) { // checks for mobility in battle grid using the gridblock function
 		int[] current = a.getlocation();
 		if (act == "LF") {
-			if ((current[1] + 1) <= 2) {
+			if ((current[0] - 1) <= 2 && current[0] != 0) {
 				return blocks[current[0] - 1][current[1]].isMoveable();
 			}
 			else {
@@ -117,7 +121,7 @@ public class battleGrid extends Grid {
 			}
 		}
 		else if (act == "UP") {
-			if ((current[1] - 1) >= 0) {
+			if ((current[1] - 1) >= 0 && current[1] != 0) {
 				return blocks[current[0]][current[1] - 1].isMoveable();
 			}
 			else {
@@ -125,7 +129,7 @@ public class battleGrid extends Grid {
 			}
 		}
 		else if (act == "RT") {
-			if ((current[1] + 1) <= 2) {
+			if ((current[0] + 1) <= 2 && current[0] != 2) {
 				return blocks[current[0] + 1][current[1]].isMoveable();
 			}
 			else {
@@ -133,7 +137,7 @@ public class battleGrid extends Grid {
 			}
 		}
 		else {
-			if ((current[1] + 1) <= 2) {
+			if ((current[1] + 1) <= 2 && current[1] != 2) {
 				return blocks[current[0]][current[1] + 1].isMoveable();
 			}
 			else {
@@ -162,15 +166,26 @@ public class battleGrid extends Grid {
 		}
 	}
 	
-	public void moveEntity(int diff, singleShotAI e) {
-		int[] current = e.getlocation();
-		if (diff > 0) {
-			blocks[current[0]][current[1]].setPlayer(10);
-			blocks[current[0]][current[1] + 1].setPlayer(0); //down
+	public void moveEntity(playerChar p, playerChar e) {
+		int[] plocate = p.getlocation();
+		int[] elocate = e.getlocation();
+		int diff = plocate[1] - elocate[1];
+		if (diff >= 1) {
+			blocks[elocate[0]][elocate[1]+1].setEnemy(blocks[elocate[0]][elocate[1]].getEnemy());
+			blocks[elocate[0]][elocate[1]+1].setEnemy(e);
+			blocks[elocate[0]][elocate[1]].setEnemy('1');
+			blocks[elocate[0]][elocate[1]].setEnemy(null);
+			
+		}
+		else if (diff <= -1) {
+			e.setLocation(elocate[0], elocate[1]-1);
+			blocks[elocate[0]][elocate[1]-1].setEnemy(blocks[elocate[0]][elocate[1]].getEnemy());
+			blocks[elocate[0]][elocate[1]-1].setEnemy(e);
+			blocks[elocate[0]][elocate[1]].setEnemy('1');
+			blocks[elocate[0]][elocate[1]].setEnemy(null);
 		}
 		else {
-			blocks[current[0]][current[1]].setPlayer(10);
-			blocks[current[0]][current[1] - 1].setPlayer(0); //up
+			return;
 		}
 	}
 	

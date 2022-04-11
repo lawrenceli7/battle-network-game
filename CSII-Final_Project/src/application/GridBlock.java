@@ -1,18 +1,37 @@
 package application;
 
-public class GridBlock {
+public class GridBlock extends playerChar{
 	private int side = 10; // 10 being placeholders simply for the hasXYZ methods to work
 	private int windowX = 0;
 	private int windowY = 0;
 	private char enemyType = '1';
 	private int playerType = 10;
 	private int obstacleType = 10;
-	private int enemyLevel = 10;
+	private int enemyLevel = 1;
 	private boolean battleBlock;
+	private playerChar enemy;
+	private int displayIndex;
 
 	public GridBlock() {
 
 	}
+	
+	public void setDisplayIndex(int i) {
+		this.displayIndex = i;
+	}
+	
+	public int getDisplayIndex() {
+		return displayIndex;
+	}
+	
+	public void setEnemy(String name, int r, int c) {
+		this.enemy = new Enemy(name, r, c);
+	}
+	
+	public void setEnemy(playerChar empty) {
+		this.enemy = empty;
+	}
+	
 
 	public void setSide(int side) { // sets data
 		this.side = side;
@@ -46,8 +65,12 @@ public class GridBlock {
 		return side;
 	}
 
-	public int getEnemy() {
+	public char getEnemy() {
 		return enemyType;
+	}
+	
+	public playerChar getEntity() {
+		return enemy;
 	}
 
 	public int getPlayer() {
