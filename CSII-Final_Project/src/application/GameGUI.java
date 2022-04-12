@@ -169,8 +169,8 @@ public class GameGUI extends Application {
 	private void chooseCharacterScreen(Stage primaryStage) {
 		// Displaying text for player option and setting the dimensions onto the screen
 		Text playerOption = new Text();
-		playerOption.setText("CHOOSE PLAYER TYPE");
-		playerOption.setX(280);
+		playerOption.setText("CHOOSE CHARACTER TYPE");
+		playerOption.setX(155);
 		playerOption.setY(100);
 		playerOption.setId("playerOptionText");
 
