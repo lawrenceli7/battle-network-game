@@ -18,5 +18,9 @@ public class Music {
 	public MediaPlayer openingMusic() {
 		return createSound("./src/intro.mp3", 0.5);
 	}
+	
+	public MediaPlayer battleMusic() {
+		return createSound("./src/battle.mp3", 0.5);
+	}
 
 }

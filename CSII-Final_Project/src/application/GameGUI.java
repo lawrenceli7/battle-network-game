@@ -40,6 +40,7 @@ public class GameGUI extends Application {
 	private VBox charInfo;
 	private VBox charInfoTwo;
 	private MediaPlayer openingMusic;
+	private MediaPlayer battleMusic;
 	private Music music;
 	private String playerName;
 	private playerChar player;
@@ -60,6 +61,7 @@ public class GameGUI extends Application {
 		stats = new VBox(15);
 		music = new Music();
 		openingMusic = music.openingMusic();
+		battleMusic = music.battleMusic();
 		player = new playerChar();
 	}
 
@@ -459,6 +461,7 @@ public class GameGUI extends Application {
 	}
 	
 	public void battleScreen(Stage primaryStage) {
+		battleMusic.play();
 		Pane display = new Pane();
 		display.setId("startTwoBackground");
 		
