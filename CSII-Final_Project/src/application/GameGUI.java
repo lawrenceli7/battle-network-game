@@ -562,6 +562,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0],i[1]-1);
 							playerButton1.setLayoutY(playerButton1.getLayoutY()-150);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -573,6 +576,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0],i[1]+1);
 							playerButton1.setLayoutY(playerButton1.getLayoutY()+150);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -584,6 +590,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0]-1,i[1]);
 							playerButton1.setLayoutX(playerButton1.getLayoutX()-200);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -595,6 +604,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0]+1,i[1]);
 							playerButton1.setLayoutX(playerButton1.getLayoutX()+200);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -782,9 +794,17 @@ public class GameGUI extends Application {
 						if (battle.blocks[h][q[1]].getEntity().isDead()) {
 							battle.blocks[h][q[1]].setEnemy('1');
 							enemyCount--;
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
+							enemyCount = 0;
 							loopBattleStage(battle, primaryStage);
-						} 
+						}
+						h = 6;
 					}
+				}
+				if (enemyCount == 0) {
+					endCard(primaryStage);
 				}
 				enemyCount = 0;
 				myTurn = false;
@@ -799,10 +819,10 @@ public class GameGUI extends Application {
 		turnText.setLayoutX(570);
 		turnText.setLayoutY(605);
 		turnText.setFont(Font.font("verdana", FontWeight.BOLD, 20));
-	//	if (myTurn == true) {
+		if (myTurn == true) {
 			turn.setFill(Color.LAWNGREEN);
 			turnText.setText("YOUR TURN");
-	/*	}
+		}
 		else {
 			turn.setFill(Color.RED);
 			turnText.setText("ENEMY TURN");
@@ -813,11 +833,11 @@ public class GameGUI extends Application {
 				loopBattleStage(battle, primaryStage);
 			}
 			else {
-				runEnemyTurn(battle, display);
+				runEnemyTurn(battle);
 				enemyCount = 0;
 				loopBattleStage(battle, primaryStage);
-			}*/
-	//	}
+			}
+		}
 		turn.setStroke(Color.BLACK);
 		turn.setStrokeWidth(5);
 		display.getChildren().addAll(turn, turnText);
@@ -927,6 +947,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0],i[1]-1);
 							playerButton1.setLayoutY(playerButton1.getLayoutY()-150);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -938,6 +961,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0],i[1]+1);
 							playerButton1.setLayoutY(playerButton1.getLayoutY()+150);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -949,6 +975,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0]-1,i[1]);
 							playerButton1.setLayoutX(playerButton1.getLayoutX()-200);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -960,6 +989,9 @@ public class GameGUI extends Application {
 							int i[] = player.getlocation();
 							player.setLocation(i[0]+1,i[1]);
 							playerButton1.setLayoutX(playerButton1.getLayoutX()+200);
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
 							enemyCount = 0;
 							myTurn = false;
 							loopBattleStage(battle, primaryStage);
@@ -1133,10 +1165,6 @@ public class GameGUI extends Application {
 				}
 			}
 		}
-		
-		if (enemyCount == 0) {
-			endCard(primaryStage);
-		}
 
 		attackButton.setOnMouseClicked(event ->{
 			if (myTurn == true) {
@@ -1147,9 +1175,17 @@ public class GameGUI extends Application {
 						if (battle.blocks[h][q[1]].getEntity().isDead()) {
 							battle.blocks[h][q[1]].setEnemy('1');
 							enemyCount--;
+							if (enemyCount == 0) {
+								endCard(primaryStage);
+							}
+							enemyCount = 0;
 							loopBattleStage(battle, primaryStage);
 						} 
+						h = 6;
 					}
+				}
+				if (enemyCount == 0) {
+					endCard(primaryStage);
 				}
 				enemyCount = 0;
 				myTurn = false;
@@ -1208,12 +1244,12 @@ public class GameGUI extends Application {
 							if (battle.blocks[f][c].getPlayer() != 10) { // attack
 								player.setHP(player.getHP()-battle.blocks[r][c].getEntity().getDMG());
 								enemyActionsTaken++;
-								emptyCount = 0;
+							//	enemyCount = 0;
 								return;
 							}
 							else if (emptyCount == 3) {
 								battle.moveEntity(player, battle.blocks[r][c].getEntity());
-								emptyCount = 0;
+							//	enemyCount = 0;
 								enemyActionsTaken++;
 								return;
 							}
