@@ -1,4 +1,3 @@
-# Comp-Sci-Final
-Repo for final project game
+# COMP1050 Final Project
 
-Similar to MegaMan Battle Network and Fire Emblem mixed
+Battle Network Turn-based Game using JavaFX inspired by MegaMan Battle Network and Fire Emblem mixed
