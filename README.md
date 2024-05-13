@@ -1,6 +1,6 @@
-# COMP1050 Final Project
-
-- Battle Network Turn-based Game using JavaFX inspired by MegaMan Battle Network and Fire Emblem mixed
+# Battle Network Game 
+- COMP1050 Final Project
+- Battle Network Turn-based Game inspired by MegaMan Battle Network and Fire Emblem mixed
 
 # Technologies Used
 - Java
