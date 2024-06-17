@@ -1,5 +1,5 @@
 # Battle Network Game 
-- COMP1050 Final Project
+- Computer Science II/COMP1050 Final Project
 
 # Technologies Used
 - Java
